@@ -1,0 +1,59 @@
+plugins {
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '3.7.0'
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+}
+
+defaultTasks 'clean','test','aggregate'
+
+group = 'co.com.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceCompatibility = 16
+targetCompatibility = 16
+
+ext {
+    seleniumVersion = '4.16.1'
+    cucumberVersion = '7.14.1'
+    testngVersion = '7.8.0'
+    serenityVersion = '3.8.1'
+    slf4jVersion = '2.0.9'
+    assertjCoreVersion = '3.24.2'
+}
+
+
+dependencies {
+    implementation "org.seleniumhq.selenium:selenium-java:${seleniumVersion}"
+    testImplementation "org.testng:testng:${testngVersion}"
+    implementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    implementation "net.serenity-bdd:serenity-core:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-junit:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-reports:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-single-page-report:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}"
+    implementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+    testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
+    testImplementation "org.assertj:assertj-core:${assertjCoreVersion}"
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
+}
+
+test {
+    testLogging.showStandardStreams = true
+    systemProperties System.getProperties()
+}
+
+serenity {
+    testRoot = "com.arreglatech.project.runners"
+    requirementsBaseDir = "src/test/resources/features"
+    reports = ["single-page-html"]
+}
+
+gradle.startParameter.continueOnFailure = true
