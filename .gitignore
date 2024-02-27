@@ -1,13 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,eclipse,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,eclipse,visualstudiocode
 
-# Drivers
-*.exe
-chromedriver
-geckodriver
-msedgedriver
-safaridriver
-
 # Serenity
 target
 
