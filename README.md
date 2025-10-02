@@ -139,7 +139,7 @@ Screenplay pattern, contains automated test scripts for various functionalities 
 1. Clone/download project
    * HTTPS:
    ```
-   {{ENTER HERE YOUR HTTPS URL TO CLONE}}
+   git clone {{ENTER HERE YOUR HTTPS URL TO CLONE}}
    ```
 2. Open project in your preferred IDE (IntelliJ recommended)
 3. Managing dependencies with gradle
@@ -170,8 +170,10 @@ customize the tags corresponding to the tests described in the .features files.
 ## 🎯 **Report & Results** [📚](#menu)
 
 After completing a test run, you can check the full report at:
->>/target/site/index.html
-> 
+>📁 target
+>>📁 site
+>>> 📊 index.html
+>
 <br>Opening the file from your preferred browser
 ![Path Serenity Report](images/report/path_serenity_report.png)
 
