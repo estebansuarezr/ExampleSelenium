@@ -1,7 +1,8 @@
-.gradle/
-target/
-history/
-build/
-.idea/
 .DS_Store
+.gradle/
+.idea/
+build/
 /out
+
+history/
+target/site/serenity/
