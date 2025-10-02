@@ -22,9 +22,9 @@ buildscript {
          * verify serenity gradle plugin version is compatible with serenity core version
          * could find conflicts in the generation of the report
          */
-        classpath("net.serenity-bdd:serenity-gradle-plugin:${serenityGradleVersion}")
-        classpath "net.serenity-bdd:serenity-single-page-report:${serenitySummaryReportVersion}"
-        classpath "net.serenity-bdd:serenity-navigator-report:${serenitySummaryReportVersion}"
+        classpath "net.serenity-bdd:serenity-gradle-plugin:${serenityVersion}"
+        classpath "net.serenity-bdd:serenity-single-page-report:${serenityVersion}"
+        classpath "net.serenity-bdd:serenity-navigator-report:${serenityVersion}"
     }
 }
 
@@ -32,17 +32,21 @@ buildscript {
 //https://plugins.gradle.org/plugin/net.serenity-bdd.serenity-gradle-plugin
 apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
 
+apply plugin: 'java'
+apply plugin: 'idea'
 
 /**
  * SETUP JAVA-PROJECT
  * /gradle/scripts/java-project.gradle
  */
-apply plugin: 'java'
-apply plugin: 'idea'
 
 java {
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
+
+    toolchain {
+        languageVersion = JavaLanguageVersion.of("${javaVersion}")
+    }
 }
 
 def varEncoding = System.getProperty("gradle.props.project.encode")
@@ -67,9 +71,8 @@ System.setProperty("build.gradle.project.package.base.url",System.getProperty('g
 System.setProperty("build.gradle.system.currentTimeMillis",String.valueOf(System.currentTimeMillis()))
 
 //execute test by tags (@Tag)
-if(     //System.getProperty("cucumber.filter.tags",null)==null &&
-        System.getProperty("tags",null) != null
-){
+if(System.getProperty("tags",null) != null)
+{
     System.setProperty("cucumber.filter.tags",System.getProperty("tags"))
 }
 
@@ -78,16 +81,16 @@ String vEnvironment = System.getProperty('environment')
 
 dependencies {
 
-    implementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-cucumber:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay-rest:${serenityCoreVersion}",
+    implementation "net.serenity-bdd:serenity-core:${serenityVersion}",
+            "net.serenity-bdd:serenity-cucumber:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}",
 
             "ch.qos.logback:logback-classic:${logback_classic_version}"
 
-    testImplementation "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+    testImplementation "net.serenity-bdd:serenity-ensure:${serenityVersion}",
+            "net.serenity-bdd:serenity-junit:${serenityVersion}",
             "org.assertj:assertj-core:${assertj_core_version}"
 
 
@@ -95,8 +98,7 @@ dependencies {
     testImplementation "org.junit.platform:junit-platform-launcher:${junit_platform_launcher_version}",
             "io.cucumber:cucumber-junit-platform-engine:${cucumber_junit_platform_engine_version}",
             "org.junit.platform:junit-platform-suite:${junit_platform_suite_version}",
-            "org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_engine_version}",
-            "org.junit.vintage:junit-vintage-engine:${junit_vintage_engine_version}"
+            "org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_engine_version}"
 
 
     //Utils
@@ -147,31 +149,25 @@ test {
  */
 
 /**
- * task personalized, call java class for available index link to results report
+ * task personalized, save a limited history of the generated reports
  */
-task generateFilmTicket(type: JavaExec) {
-    main = System.getProperty('gradle.props.project.package.base')+'.setups.hooks.postproduction.gradletasks.Ticket'
-    classpath = sourceSets.test.runtimeClasspath
-}
-
-task historyReports {
+tasks.register('historyReports') {
     doLast {
-        def backupDir
-        if('pipeline'.equalsIgnoreCase(vEnvironment))
-        {
-            backupDir = file(System.getProperty('gradle.props.project.reports.dir.history')+"/reports")
-        }else{
-            backupDir = file(System.getProperty('gradle.props.project.reports.dir.history')+"/reports-${new Date().format('yyyyMMdd-HHmmss')}")
+        //def backupDir
+        if ('pipeline'.equalsIgnoreCase(vEnvironment)) {
+            project.ext.backupDir = file(System.getProperty('gradle.props.project.reports.dir.history') + "/reports")
+        } else {
+            project.ext.backupDir = file(System.getProperty('gradle.props.project.reports.dir.history') + "/reports-${new Date().format('yyyyMMdd-HHmmss')}")
         }
 
-        backupDir.mkdirs()
+        project.ext.backupDir.mkdirs()
         copy {
-            from 'target/site'
-            into backupDir
+            from 'target/site/serenity'
+            into file("${project.ext.backupDir}/serenity")
         }
         copy {
             from System.getProperty('gradle.props.project.reports.dir')
-            into backupDir
+            into project.ext.backupDir
         }
 
         // get lists directories located in history folder
@@ -189,6 +185,19 @@ task historyReports {
         if (backupDirs.size() > limitRecents) {
             backupDirs.drop(limitRecents).each { it.deleteDir() }
         }
+    }
+}
+
+
+/**
+ * task personalized, call java class for available index link to results report
+ */
+tasks.register('generateFilmTicket', JavaExec) {
+    main = System.getProperty('gradle.props.project.package.base') + '.setups.hooks.postproduction.gradletasks.Ticket'
+    classpath = sourceSets.test.runtimeClasspath
+
+    doFirst {
+        args project.ext.backupDir
     }
 }
 
@@ -222,9 +231,13 @@ test.finalizedBy(aggregate)
 aggregate.finalizedBy(reports)
 
 /**
+ * historyReports: task personalized
+ * save a limited history of the generated reports in: ./history/reports_yyyyMMdd-HHmmss
+ */
+reports.finalizedBy(historyReports)
+
+/**
  * generateFilmTicket task personalized after reports task
  * organize report serenity: ./target/site/serenity
  */
-reports.finalizedBy(generateFilmTicket)
-
-generateFilmTicket.finalizedBy(historyReports)
+historyReports.finalizedBy(generateFilmTicket)
