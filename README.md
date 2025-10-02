@@ -1,6 +1,8 @@
 
 <h1 align="center">🦾 Web Test Automation - {{Project Name}} 🦾</h1>
 
+<br>
+
 This web automation project, developed in Java/Gradle with Serenity BDD, Selenium-WebDriver, Cucumber, and the 
 Screenplay pattern, contains automated test scripts for various functionalities and workflows available in the 
 {{Project Name}} application.
