@@ -1,0 +1,7 @@
+<aspectj>
+    <aspects>
+        <!--    Spoiler (.gif evidence) <[SPOILER_GIF_EVIDENCE]>    -->
+        <aspect name="com.arreglatech.project.setups.hooks.production.Action"/>
+    </aspects>
+</aspectj>
+

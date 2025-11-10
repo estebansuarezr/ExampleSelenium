@@ -22,9 +22,9 @@ buildscript {
          * verify serenity gradle plugin version is compatible with serenity core version
          * could find conflicts in the generation of the report
          */
-        classpath("net.serenity-bdd:serenity-gradle-plugin:${serenityGradleVersion}")
-        classpath "net.serenity-bdd:serenity-single-page-report:${serenitySummaryReportVersion}"
-        classpath "net.serenity-bdd:serenity-navigator-report:${serenitySummaryReportVersion}"
+        classpath("net.serenity-bdd:serenity-gradle-plugin:${serenityVersion}")
+        classpath "net.serenity-bdd:serenity-single-page-report:${serenityVersion}"
+        classpath "net.serenity-bdd:serenity-navigator-report:${serenityVersion}"
     }
 }
 
@@ -78,16 +78,16 @@ String vEnvironment = System.getProperty('environment')
 
 dependencies {
 
-    implementation "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-cucumber:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-screenplay-rest:${serenityCoreVersion}",
+    implementation "net.serenity-bdd:serenity-core:${serenityVersion}",
+            "net.serenity-bdd:serenity-cucumber:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}",
+            "net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}",
 
             "ch.qos.logback:logback-classic:${logback_classic_version}"
 
-    testImplementation "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}",
-            "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+    testImplementation "net.serenity-bdd:serenity-ensure:${serenityVersion}",
+            "net.serenity-bdd:serenity-junit:${serenityVersion}",
             "org.assertj:assertj-core:${assertj_core_version}"
 
 
@@ -101,7 +101,11 @@ dependencies {
 
     //Utils
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    implementation "org.projectlombok:lombok:${lombokVersion}"
+
+    //Spoiler (.gif evidence) <[SPOILER_GIF_EVIDENCE]>
+    implementation "com.madgag:animated-gif-lib:${animated_gif_lib_version}"
+    implementation "org.aspectj:aspectjweaver:${aspectjweaver_version}"
 }
 
 /**
@@ -200,7 +204,7 @@ task historyReports {
  * clean task before compileJava task
  * //clearReports task before test task -- removed, not necessary with clean
  */
-if(System.getProperty("reports.merged",null) == null
+if(System.getProperty("retest",null) == null
 ){
     //compileJava.dependsOn(clean)
     test.dependsOn(clearReports)
