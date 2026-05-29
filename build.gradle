@@ -141,7 +141,11 @@ test {
     testLogging.showStandardStreams = true
 
     reports {
-        html.destination(file(System.getProperty('gradle.props.project.reports.dir')+'/gradle'))
+        html {
+            outputLocation.set(
+                    file(System.getProperty('gradle.props.project.reports.dir') + '/gradle')
+            )
+        }
     }
 }
 
@@ -197,7 +201,7 @@ tasks.register('historyReports') {
  * task personalized, call java class for available index link to results report
  */
 tasks.register('generateFilmTicket', JavaExec) {
-    main = System.getProperty('gradle.props.project.package.base') + '.setups.hooks.postproduction.gradletasks.Ticket'
+    mainClass = System.getProperty('gradle.props.project.package.base') + '.setups.hooks.postproduction.gradletasks.Ticket'
     classpath = sourceSets.test.runtimeClasspath
 
     doFirst {

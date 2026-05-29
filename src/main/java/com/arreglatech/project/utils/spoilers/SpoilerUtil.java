@@ -80,7 +80,7 @@ public class SpoilerUtil
 
             ScreenshotUtil.screenshot(
                     String.valueOf(pathSpoilerRelative),
-                    10
+                    5
             );
 
             List<File> lstScreenshots =
@@ -94,7 +94,7 @@ public class SpoilerUtil
 
             if(!lstScreenshots.isEmpty())
             {
-            Path gifFile = Paths.get(
+                Path gifFile = Paths.get(
                     pathSpoilerRelative.toString(),
                     new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())
                             + StringUtils.SPACE + scenario.getStatus().toString()
@@ -115,11 +115,13 @@ public class SpoilerUtil
                 for(File screenshot : lstScreenshots){
                     screenshot.deleteOnExit();
                 }
+
             }
 
-        } catch (IOException  e) {
+        } catch (Exception e) {
             LogUtil.error(e);
         }
+
     }
 
 }
