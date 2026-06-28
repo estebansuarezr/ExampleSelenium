@@ -16,9 +16,8 @@ public class RunnerConstants {
 
     public static final String PRETTY = "pretty";
     public static final String CAMELCASE = "camelcase";
-    public static final String CUCUMBER_SERENITY_REPORTER_PARALLEL = "io.cucumber.core.plugin.SerenityReporterParallel"
-    //public static final String CUCUMBER_SERENITY_REPORTER_PARALLEL = "io.cucumber.core.plugin.SerenityReporter"
-    ;
+    public static final String CUCUMBER_SERENITY_REPORTER_PARALLEL = "net.serenitybdd.cucumber.core.plugin.SerenityReporterParallel";
+
     public static final String DIR_REPORT_JSON = "json:build/reports/cucumber/results.json";
     public static final String DIR_REPORT_JUNIT = "junit:build/reports/cucumber/results.xml";
     public static final String DIR_REPORT_HTML = "html:build/reports/cucumber/results.html";
