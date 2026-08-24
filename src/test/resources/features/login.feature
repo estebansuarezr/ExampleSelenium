@@ -1,7 +1,7 @@
 Feature: Login
 
-  Scenario: Successful login
-
-    Given the user is on the login page
-    When the user logs in with user and password
-    Then the Products page should be displayed
+  @LogIn
+  Scenario: Login exitoso
+    Given el usuario se encuentra en la pagina de inicio
+    When el usuario inicie sesion con sus credenciales
+    Then el sistema debe mostrar la pagina SwagLabs
