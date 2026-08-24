@@ -34,11 +34,11 @@ public class ValidateArticleStepDefinition {
             String descripcion) {
 
         theActorCalled(USERNAME).attemptsTo(
-                /*Ensure.that((String) theActorCalled(USERNAME).recall("articlePriceHomePage"))
+                Ensure.that((String) theActorCalled(USERNAME).recall("articlePriceHomePage"))
                         .isEqualTo(precio),
 
                 Ensure.that((String) theActorCalled(USERNAME).recall("articleDescriptionHomePage"))
-                        .isEqualTo(descripcion),*/
+                        .isEqualTo(descripcion),
 
                 Ensure.that((String) theActorCalled(USERNAME).recall("articlePriceDetail"))
                         .isEqualTo(precio),
